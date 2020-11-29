@@ -2,6 +2,7 @@ import time
 import json
 from db_con import *
 from box_con import *
+from encryp_json import *
 
 
 FILE_ID = 'last_id.txt'
@@ -28,10 +29,15 @@ def save_to_json(dataName):
     json_data= json.dumps(dataName)
     number_file = 1 + retrieve_last_seen_id(FILE_NAME)
     nama_file ="%d.json"%number_file
+    nama_file_encryp ="%d-encrypt.json"%number_file
     print("** Penyimpanan data pada file %s" %nama_file)
     with open(nama_file, 'w') as fh:
         fh.write(json_data)
-    upload_to_box(nama_file)
+    
+    print("*** Melakukan enkripsi file %s" %nama_file)
+    encrypt_json_file(nama_file, nama_file_encryp)
+    print("**** Hasil Enkripsi file %s" %nama_file_encryp)
+    upload_to_box(nama_file_encryp)
     store_last_seen_id(number_file, FILE_NAME)
 
     
@@ -42,8 +48,8 @@ def upload_to_box(file_name):
 
     folder_id = '0'
     new_file = client.folder(folder_id).upload_stream(stream, file_name)
-    print('*** Upload file "{0}" ke Box'.format(new_file.name))
-    print('**** ID file :"{0}" '.format(new_file.id))
+    print('**** Upload file "{0}" ke Box'.format(new_file.name))
+    print('***** ID file :"{0}" '.format(new_file.id))
     print("------------------SELESAI--------------------")
     print("---------------------------------------------")
 

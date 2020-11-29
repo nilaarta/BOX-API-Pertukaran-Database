@@ -2,6 +2,7 @@ import time
 import json
 from db_con import *
 from box_con import *
+from decrypt_json import *
 
 FILE_NAME = 'last_name.txt'
 
@@ -21,16 +22,21 @@ def download_file(name_file):
 def engineID(last_seen_id):
     number_file = 1 + last_seen_id
     name_file ="%d.json"%number_file
-    if download_file(name_file) == False:
+    nama_file_encryp ="%d-encrypt.json"%number_file
+    if download_file(nama_file_encryp) == False:
         print("tidak ada file baru")
         return
+    print('** Dekripsi file %s'%nama_file_encryp)
+    decyrpt_file_json(nama_file_encryp, name_file)
+    print('*** Hasil Dekripsi file %s'%name_file)
+
     json_to_mysql(name_file)
     store_last_seen_id(number_file, FILE_NAME)
     print("-----------------SELESAI-------------------")
     print("-------------------------------------------")
 
 def json_to_mysql(file):
-    print("** Extrack data dari %s"%file )
+    print("**** Extrack data dari %s ke Database"%file )
     with open(file) as json_file:
         json_data = json.load(json_file)
     for data in json_data:
@@ -41,7 +47,7 @@ def json_to_mysql(file):
         curDb.execute("INSERT INTO tb_produk_penerima(nama, deskripsi, jumlah) VALUES (%s, %s, %s)", (nama, deskripsi, jumlah))
     connDb.commit()
     curDb.close()
-    print("*** Menambahkan Data Ke Database ")
+    print("***** Menambahkan Data Ke Database ")
 
 def retrieve_last_seen_id(file_name):
     f_read = open(file_name, 'r')
