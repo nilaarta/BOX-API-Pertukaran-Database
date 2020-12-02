@@ -1,0 +1,22 @@
+1. tb_mapping_db
+	id_mapping_db int
+	nama_db_source varchar 50
+	ip_db_source varchar 12
+	user_name_source varchar 
+	password_source varchar
+	nama_db_destination varchar 50
+	ip_db_destination varchar 12
+	user_name_destination varchar 
+	password_destination varchar
+	
+2. tb_mapping_table
+	id_mapping_table auto number
+	id_mapping_db int
+	nama_table_source
+	nama_table_destination
+
+3. tb_mapping_field
+	id_mapping_field auto number
+	id_mapping table FK
+	field_source	varchar
+	field_destination	varchar
